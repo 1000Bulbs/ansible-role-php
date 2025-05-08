@@ -4,3 +4,4 @@ molecule-docker
 pytest
 pytest-pretty
 pytest-testinfra
+pyyaml

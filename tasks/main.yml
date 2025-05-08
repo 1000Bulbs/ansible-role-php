@@ -85,3 +85,27 @@
   ansible.builtin.command: "php{{ php_version }} -m"
   register: php_modules
   changed_when: false
+
+- name: Ensure PHP SAPI config directories exist
+  ansible.builtin.file:
+    path: "/etc/php/{{ php_version }}/{{ item.sapi }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+
+- name: Create PHP INI configuration files
+  ansible.builtin.template:
+    src: php.ini.j2
+    dest: "/etc/php/{{ php_version }}/{{ item.sapi }}/php.ini"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+  vars:
+    disable_functions: "{{ item.disable_functions }}"
+    expose_php: "{{ item.expose_php }}"
+    memory_limit: "{{ item.memory_limit }}"
