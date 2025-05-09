@@ -8,3 +8,5 @@ php_ppa_dependencies:
 php_repo: ppa:ondrej/php
 
 php_source_list_file: /etc/apt/sources.list.d/ondrej-ubuntu-php-{{ ansible_lsb.codename }}.list
+
+php_phing_file: /usr/local/bin/phing
