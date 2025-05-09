@@ -1,35 +1,13 @@
 # molecule/default/tests/test_php_packages.py
 import pytest
+from utils import load_yaml
 
-# Define variables as used in your role
-php_version = "5.6"
+vars = load_yaml("../vars/php.yml")
 
-php_base_packages = [
-    "php-pear",
-    "php-php-gettext",
-]
+php_version = vars["php_version"]
+php_base_packages = vars["php_base_packages"]
+php_extensions = vars["php_extensions"]
 
-php_extensions = [
-    "bcmath",
-    "curl",
-    "dev",
-    "gd",
-    "gmp",
-    "igbinary",
-    "imagick",
-    "mbstring",
-    "mcrypt",
-    "mysql",
-    "redis",
-    "soap",
-    "xdebug",
-    "xml",
-    "xmlrpc",
-    "yaml",
-    "zip",
-]
-
-# Build full expected package list
 expected_packages = php_base_packages + [
     f"php{php_version}-{ext}" for ext in php_extensions
 ]

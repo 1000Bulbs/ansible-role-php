@@ -2,6 +2,34 @@
 ---
 php_version: "5.6"
 
+php_ppa_dependencies:
+  - software-properties-common
+  - gnupg
+  - gpg-agent
+
+php_base_packages:
+  - php-pear
+  - php-php-gettext
+
+php_extensions:
+  - bcmath
+  - curl
+  - dev
+  - gd
+  - gmp
+  - igbinary
+  - imagick
+  - mbstring
+  - mcrypt
+  - mysql
+  - redis
+  - soap
+  - xdebug
+  - xml
+  - xmlrpc
+  - yaml
+  - zip
+
 php_ini_sapi_configs:
   - sapi: apache2
     disable_functions:
@@ -14,3 +42,5 @@ php_ini_sapi_configs:
     disable_functions: ''
     expose_php: 'On'
     memory_limit: '-1'
+
+php_phing_file: /usr/local/bin/phing

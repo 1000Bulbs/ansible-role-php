@@ -1,15 +1,13 @@
 # molecule/default/tests/test_php_ppa.py
 import pytest
+from utils import load_yaml
+
+vars = load_yaml("../vars/php.yml")
+
+php_ppa_dependencies = vars["php_ppa_dependencies"]
 
 
-@pytest.mark.parametrize(
-    "pkg",
-    [
-        "software-properties-common",
-        "gnupg",
-        "gpg-agent",
-    ],
-)
+@pytest.mark.parametrize("pkg", php_ppa_dependencies)
 def test_php_ppa_dependencies_installed(host, pkg):
     package = host.package(pkg)
     assert package.is_installed

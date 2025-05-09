@@ -1,11 +1,8 @@
 # molecule/default/tests/test_php_ini.py
-
 import pytest
-import yaml
-from pathlib import Path
+from utils import load_yaml
 
-with open(Path(__file__).resolve().parent / "../vars/php.yml") as f:
-    vars = yaml.safe_load(f)
+vars = load_yaml("../vars/php.yml")
 
 php_version = vars["php_version"]
 php_ini_sapi_configs = vars["php_ini_sapi_configs"]
