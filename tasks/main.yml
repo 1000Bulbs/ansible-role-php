@@ -64,13 +64,13 @@
   ansible.builtin.file:
     path: /etc/php/{{ php_version }}/apache2
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Ensure geoip.ini is present in mods-available
   ansible.builtin.copy:
     dest: /etc/php/{{ php_version }}/mods-available/geoip.ini
     content: "extension=geoip.so\n"
-    mode: '0644'
+    mode: "0644"
 
 - name: Enable geoip extension for cli and apache2 SAPIs
   ansible.builtin.command: phpenmod -v {{ php_version }} -s {{ item }} geoip
@@ -85,3 +85,27 @@
   ansible.builtin.command: php{{ php_version }} -m
   register: php_modules
   changed_when: false
+
+- name: Ensure PHP SAPI config directories exist
+  ansible.builtin.file:
+    path: /etc/php/{{ php_version }}/{{ item.sapi }}
+    state: directory
+    mode: "0755"
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+
+- name: Create PHP INI configuration files
+  ansible.builtin.template:
+    src: php.ini.j2
+    dest: /etc/php/{{ php_version }}/{{ item.sapi }}/php.ini
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+  vars:
+    disable_functions: "{{ item.disable_functions }}"
+    expose_php: "{{ item.expose_php }}"
+    memory_limit: "{{ item.memory_limit }}"
