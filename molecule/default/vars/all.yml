@@ -44,3 +44,5 @@ php_ini_sapi_configs:
     disable_functions: ""
     expose_php: "On"
     memory_limit: "-1"
+
+php_phing_file: /usr/local/bin/phing

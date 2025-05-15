@@ -109,3 +109,11 @@
     disable_functions: "{{ item.disable_functions }}"
     expose_php: "{{ item.expose_php }}"
     memory_limit: "{{ item.memory_limit }}"
+
+- name: Copy phing file
+  ansible.builtin.copy:
+    src: phing
+    dest: "{{ php_phing_file }}"
+    owner: root
+    group: root
+    mode: "0755"
