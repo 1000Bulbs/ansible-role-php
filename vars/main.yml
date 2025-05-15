@@ -1,2 +1,10 @@
 # vars/main.yml
 ---
+php_ppa_dependencies:
+  - software-properties-common
+  - gnupg
+  - gpg-agent
+
+php_repo: ondrej/php
+
+php_source_list_file: /etc/apt/sources.list.d/ondrej-ubuntu-php-{{ ansible_lsb.codename }}.list
