@@ -16,5 +16,8 @@ expected_packages = php_base_packages + [
 
 @pytest.mark.parametrize("pkg", expected_packages)
 def test_php_package_installed(host, pkg):
+    """
+    Test that the specified PHP package is installed on the system.
+    """
     package = host.package(pkg)
-    assert package.is_installed
+    assert package.is_installed, f"{pkg} is not installed"

@@ -36,3 +36,52 @@
     state: present
     update_cache: true
   when: php_packages | length > 0
+
+- name: Install geoip dependencies
+  ansible.builtin.apt:
+    name:
+      - libgeoip-dev
+      - php{{ php_version }}-dev
+      - php-pear
+      - build-essential
+      - autoconf
+    state: present
+    update_cache: true
+
+- name: Get PHP extension directory
+  ansible.builtin.command: php{{ php_version }} -r 'echo ini_get("extension_dir");'
+  register: php_ext_dir
+  changed_when: false
+
+- name: Install geoip via pecl
+  ansible.builtin.command: pecl install geoip
+  environment:
+    PHP_PEAR_PHP_BIN: /usr/bin/php{{ php_version }}
+  args:
+    creates: "{{ php_ext_dir.stdout }}/geoip.so"
+
+- name: Ensure apache2 PHP config directory exists
+  ansible.builtin.file:
+    path: /etc/php/{{ php_version }}/apache2
+    state: directory
+    mode: '0755'
+
+- name: Ensure geoip.ini is present in mods-available
+  ansible.builtin.copy:
+    dest: /etc/php/{{ php_version }}/mods-available/geoip.ini
+    content: "extension=geoip.so\n"
+    mode: '0644'
+
+- name: Enable geoip extension for cli and apache2 SAPIs
+  ansible.builtin.command: phpenmod -v {{ php_version }} -s {{ item }} geoip
+  args:
+    creates: /etc/php/{{ php_version }}/{{ item }}/conf.d/20-geoip.ini
+  loop:
+    - cli
+    - apache2
+  changed_when: false
+
+- name: Verify geoip extension loaded
+  ansible.builtin.command: php{{ php_version }} -m
+  register: php_modules
+  changed_when: false
