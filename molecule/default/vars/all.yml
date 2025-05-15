@@ -6,3 +6,28 @@ php_ppa_dependencies:
   - gpg-agent
 
 php_repo: ondrej/php
+
+php_version: "5.6"
+
+php_base_packages:
+  - php-pear
+  - php-php-gettext
+
+php_extensions:
+  - bcmath
+  - curl
+  - dev
+  - gd
+  - gmp
+  - igbinary
+  - imagick
+  - mbstring
+  - mcrypt
+  - mysql
+  - redis
+  - soap
+  - xdebug
+  - xml
+  - xmlrpc
+  - yaml
+  - zip
