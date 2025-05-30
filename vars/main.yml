@@ -1,2 +1,13 @@
 # vars/main.yml
 ---
+# List of packages required to add and manage PPAs securely
+php_ppa_dependencies:
+  - software-properties-common
+  - gnupg
+  - gpg-agent
+
+# The PHP PPA repository to use
+php_repo: ondrej/php
+
+# Path to the PHP source list file
+php_source_list_file: /etc/apt/sources.list.d/ondrej-ubuntu-php-{{ ansible_lsb.codename }}.list

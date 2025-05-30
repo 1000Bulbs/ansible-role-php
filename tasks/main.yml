@@ -1,2 +1,27 @@
 # tasks/main.yml
 ---
+- name: Ensure PPA dependencies are installed
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    name: "{{ php_ppa_dependencies }}"
+    state: present
+    update_cache: true
+
+- name: Ensure PHP PPA source list file exists
+  register: php_ppa_file
+  ansible.builtin.stat:
+    path: "{{ php_source_list_file }}"
+
+- name: Ensure Ondrej PHP PPA installed
+  when:
+    - ansible_os_family == "Debian"
+    - not php_ppa_file.stat.exists
+  environment:
+    LC_ALL: C.UTF-8
+  changed_when: false
+  ansible.builtin.command: add-apt-repository -y ppa:{{ php_repo }}
+
+- name: Ensure apt cache
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    update_cache: true
