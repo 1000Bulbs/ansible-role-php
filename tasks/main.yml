@@ -61,3 +61,11 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Ensure phing file
+  ansible.builtin.copy:
+    src: phing
+    dest: "{{ php_phing_file }}"
+    owner: root
+    group: root
+    mode: "0755"

@@ -11,3 +11,5 @@ php_repo: ondrej/php
 
 # Path to the PHP source list file
 php_source_list_file: /etc/apt/sources.list.d/ondrej-ubuntu-php-{{ ansible_lsb.codename }}.list
+
+php_phing_file: /usr/local/bin/phing

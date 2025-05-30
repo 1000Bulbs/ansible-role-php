@@ -46,6 +46,8 @@ php_ini_sapi_configs = [
     {"sapi": "cli", "disable_functions": "", "expose_php": "On", "memory_limit": "-1"},
 ]
 
+php_phing_file = "/usr/local/bin/phing"
+
 
 @pytest.mark.parametrize("pkg", php_ppa_dependencies)
 def test_php_ppa_dependencies_installed(host, pkg):
@@ -112,3 +114,12 @@ def test_php_ini_contains_expected_values(host, config):
         expected_disabled = config["disable_functions"]
 
     assert f"disable_functions = {expected_disabled}" in ini
+
+
+def test_phing_file_exists(host):
+    f = host.file(php_phing_file)
+    assert f.exists
+    assert f.is_file
+    assert f.user == "root"
+    assert f.group == "root"
+    assert f.mode == 0o755
