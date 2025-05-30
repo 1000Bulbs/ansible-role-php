@@ -1,2 +1,31 @@
 # defaults/main.yml
 ---
+# The PHP version to install
+php_version: "5.6"
+
+# List of base PHP packages to install
+php_base_packages:
+  - php-pear
+  - php-php-gettext
+
+# List of additional PHP extensions to install
+php_extensions:
+  - bcmath
+  - curl
+  - dev
+  - fpm
+  - geoip
+  - gd
+  - gmp
+  - igbinary
+  - imagick
+  - mbstring
+  - mcrypt
+  - mysql
+  - redis
+  - soap
+  - xdebug
+  - xml
+  - xmlrpc
+  - yaml
+  - zip

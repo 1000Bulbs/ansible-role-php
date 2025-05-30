@@ -25,3 +25,15 @@
   when: ansible_os_family == "Debian"
   ansible.builtin.apt:
     update_cache: true
+
+- name: Build PHP package list
+  ansible.builtin.set_fact:
+    php_packages: "{{ php_base_packages + php_extensions | map('regex_replace', '^(.*)$', 'php' ~ php_version ~ '-\\1') | list }}"
+
+- name: Ensure php packages are installed
+  when: php_packages | length > 0
+  notify: Restart php-fpm
+  ansible.builtin.apt:
+    name: "{{ php_packages }}"
+    state: present
+    update_cache: true

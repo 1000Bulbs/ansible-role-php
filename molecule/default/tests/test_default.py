@@ -1,12 +1,40 @@
 # molecule/default/tests/test_default.py
 import pytest
 
-php_ppa_dependencies = [
-    "software-properties-common",
-    "gnupg",
-    "gpg-agent",
-]
+php_ppa_dependencies = ["software-properties-common", "gnupg", "gpg-agent"]
+
 php_repo = "ondrej/php"
+
+php_version = "5.6"
+
+php_base_packages = ["php-pear", "php-php-gettext"]
+
+php_extensions = [
+    "bcmath",
+    "curl",
+    "dev",
+    "gd",
+    "geoip",
+    "gmp",
+    "igbinary",
+    "imagick",
+    "mbstring",
+    "mcrypt",
+    "mysql",
+    "redis",
+    "soap",
+    "xdebug",
+    "xml",
+    "xmlrpc",
+    "yaml",
+    "zip",
+]
+
+expected_packages = php_base_packages + [
+    f"php{php_version}-{ext}" for ext in php_extensions
+]
+
+php_fpm_systemd_service_name = "php5.6-fpm"
 
 
 @pytest.mark.parametrize("pkg", php_ppa_dependencies)
@@ -40,3 +68,19 @@ def test_php_ppa_present_in_sources(host):
     assert list_result.rc == 0 or sources_result.rc == 0, (
         "Ondřej PHP PPA not found in APT sources (neither .list nor .sources files)."
     )
+
+
+@pytest.mark.parametrize("pkg", expected_packages)
+def test_php_package_installed(host, pkg):
+    package = host.package(pkg)
+    assert package.is_installed
+
+
+def test_php_fpm_service_is_enabled(host):
+    svc = host.service(php_fpm_systemd_service_name)
+    assert svc.is_enabled
+
+
+def test_php_fpm_service_is_running(host):
+    svc = host.service(php_fpm_systemd_service_name)
+    assert svc.is_running
