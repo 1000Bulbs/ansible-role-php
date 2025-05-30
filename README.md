@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/1000Bulbs/ansible-role-php/actions/workflows/ci.yml/badge.svg)](https://github.com/1000Bulbs/ansible-role-php/actions/workflows/ci.yml)
 
-A brief description of the role goes here.
+This Ansible role installs and configures PHP on Debian-based systems. It manages PHP repository setup, installs PHP and extensions, configures INI files for different SAPIs (cli & fpm),and ensures required dependencies and configuration files are present.
 
 ---
 
@@ -20,18 +20,23 @@ These variables can be overridden in your inventory, playbooks, or `group_vars`.
 
 ### Defaults (`defaults/main.yml`)
 
-Add a list of default variables that are defined in the role's `defaults/main.yml` file.
+- `php_version`: The PHP version to install (e.g., `8.1`).
+- `php_base_packages`: List of base PHP packages to install.
+- `php_extensions`: List of PHP extensions to install.
+- `php_ini_sapi_configs`: List of SAPI-specific PHP INI configuration options.
 
 ### Variables (`vars/main.yml`)
 
-_No variables defined._
+- `php_ppa_dependencies`: List of packages required to add the PHP PPA.
+- `php_repo`: The PPA repository to use (default: `ondrej/php`).
+- `php_source_list_file`: Path to the PHP PPA source list file.
+- `php_phing_file`: Destination path for the phing file.
 
 ---
 
 ## 📦 Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be
-set for other roles, or variables that are used from other roles.
+This role has no external dependencies.
 
 ---
 
