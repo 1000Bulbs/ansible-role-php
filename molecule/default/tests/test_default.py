@@ -36,6 +36,16 @@ expected_packages = php_base_packages + [
 
 php_fpm_systemd_service_name = "php5.6-fpm"
 
+php_ini_sapi_configs = [
+    {
+        "sapi": "fpm",
+        "disable_functions": ["pcntl_alarm", "pcntl_fork"],
+        "expose_php": "Off",
+        "memory_limit": "128M",
+    },
+    {"sapi": "cli", "disable_functions": "", "expose_php": "On", "memory_limit": "-1"},
+]
+
 
 @pytest.mark.parametrize("pkg", php_ppa_dependencies)
 def test_php_ppa_dependencies_installed(host, pkg):
@@ -84,3 +94,21 @@ def test_php_fpm_service_is_enabled(host):
 def test_php_fpm_service_is_running(host):
     svc = host.service(php_fpm_systemd_service_name)
     assert svc.is_running
+
+
+@pytest.mark.parametrize("config", php_ini_sapi_configs, ids=lambda x: x["sapi"])
+def test_php_ini_contains_expected_values(host, config):
+    path = f"/etc/php/{php_version}/{config['sapi']}/php.ini"
+    ini = host.file(path).content_string
+
+    # Basic settings
+    assert f"memory_limit = {config['memory_limit']}" in ini
+    assert f"expose_php = {config['expose_php']}" in ini
+
+    # Disable functions may be a list or string
+    if isinstance(config["disable_functions"], list):
+        expected_disabled = ",".join(config["disable_functions"])
+    else:
+        expected_disabled = config["disable_functions"]
+
+    assert f"disable_functions = {expected_disabled}" in ini

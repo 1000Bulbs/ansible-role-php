@@ -37,3 +37,27 @@
     name: "{{ php_packages }}"
     state: present
     update_cache: true
+
+- name: Ensure PHP SAPI config directories exist
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+  ansible.builtin.file:
+    path: /etc/php/{{ php_version }}/{{ item.sapi }}
+    state: directory
+    mode: "0755"
+
+- name: Ensure PHP INI configuration files
+  loop: "{{ php_ini_sapi_configs }}"
+  loop_control:
+    label: "{{ item.sapi }}"
+  vars:
+    disable_functions: "{{ item.disable_functions }}"
+    expose_php: "{{ item.expose_php }}"
+    memory_limit: "{{ item.memory_limit }}"
+  ansible.builtin.template:
+    src: php.ini.j2
+    dest: /etc/php/{{ php_version }}/{{ item.sapi }}/php.ini
+    owner: root
+    group: root
+    mode: "0644"
